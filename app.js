@@ -9,18 +9,15 @@ const express = require('express');
 const userRouter = require('./routers/userRouter');
 
 const app = express();
+app.use(express.json());
 
 app.use('/api/user', userRouter);
-/*
-app.get('/prueba1', (req, res) => {
-    res.send('Hello World');
-})
 
-app.get('/prueba2', (req, res) => {
-    res.send('Byte World');
-})
-*/
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 })
+
+// http://localhost:3000/api/user
+// http://localhost:3000/api/user/1
+// http://localhost:3000/api/user/name/Diego Morales
