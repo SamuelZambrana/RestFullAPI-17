@@ -22,6 +22,17 @@ const getUserByName = (req, res) => {
     res.send(user)
 }
 
+const getUserAge = (req, res) => {
+    const edad = parseInt(req.params.edad); // Corrección en la extracción del parámetro
+    const user = users.find(user => user.edad === edad);
+
+    if (!user) {
+        return res.status(404).send('User not found'); // Usar código de estado 404 para mejor práctica
+    }
+
+    res.json(user); // Mejor práctica: devolver la respuesta en formato JSON
+};
+
 const addUser = (req, res) => {
    const newUser = req.body;
    console.log(newUser);
@@ -32,5 +43,6 @@ module.exports = {
     getAllUser,
     getUserById,
     getUserByName,
-    addUser
+    addUser,
+    getUserAge
 }
