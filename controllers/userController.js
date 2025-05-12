@@ -1,7 +1,8 @@
-const users = require('../db/users');
+const users = require('../db/users'); //MOCK
+const userModel = require('../models/userModel')
 
 const getAllUser =  (req, res) => {
-   res.send(users);
+   const user = userModel.find({name: "pepe"},{})
 }
 
 const getUserById = (req, res) => {
@@ -33,11 +34,15 @@ const getUserAge = (req, res) => {
     res.json(user); // Mejor práctica: devolver la respuesta en formato JSON
 };
 
-const addUser = (req, res) => {
-   const newUser = req.body;
-   console.log(newUser);
-   res.send('User added');
-}
+const addUser = async (req, res) => {
+    try {
+      const newUser = req.body;
+      await userModel.create(newUser)
+      res.status(200).send("El usuario se ha creado correctamente");
+    } catch (error) {
+      res.status(500).send({ status:"Failed", error: error.message })
+    }
+};
 
 module.exports = {
     getAllUser,

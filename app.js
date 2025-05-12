@@ -7,10 +7,15 @@
 const PORT = 3000;
 const express = require('express');
 const userRouter = require('./routers/userRouter');
+require("dotenv").config();
+const connectToDatabase = require('./db/connetDB');
+
+
 
 const app = express();
 app.use(express.json());
 
+connectToDatabase();
 app.use('/api/user', userRouter);
 
 

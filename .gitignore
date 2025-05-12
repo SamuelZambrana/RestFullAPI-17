@@ -1,1 +1,16 @@
-/node_modules
+# Ignorar dependencias de Node.js
+node_modules/
+
+# Ignorar archivos de entorno
+.env
+
+# Ignorar archivos de log
+*.log
+
+# Ignorar caché de npm
+npm-debug.log
+
+# Ignorar directorios específicos de IDEs
+.vscode/
+.idea/
+.DS_Store
