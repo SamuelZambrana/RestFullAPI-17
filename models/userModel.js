@@ -26,7 +26,16 @@ const userSchema = new Schema({
     enum: ["user", "admin"],
     default: "user",
   },
+  favourites: {
+    type: [ mongoose.Schema.Types.ObjectId ],
+    ref: "Movie",
+  },
 });
+
+userSchema.pre(/^find/, function(next) {
+    this.select('-password');
+    next();
+  });
  
 const userModel = mongoose.model("User", userSchema, "user");
  

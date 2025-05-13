@@ -1,38 +1,97 @@
-const users = require('../db/users'); //MOCK
 const userModel = require('../models/userModel')
 
-const getAllUser =  (req, res) => {
-   const user = userModel.find({name: "pepe"},{})
-}
-
-const getUserById = (req, res) => {
-    const { idUser } = req.params;
-    const user = users.filter(user => user.id === parseInt(idUser));
-    if (!user.length === 0) {
-        return res.send('User not found');
+const getAllUser = async (req, res) => {
+    try {
+      const users = await userModel.find();
+      if(!users){
+        return res.status(200).send("No hay usuario");
+      }
+      res.status(200).send(users)
+    } catch (error) {
+      res.status(500).send({ status: "Failed", error: error.message });
     }
-    res.send(user)
+  };
+
+const getUserById =  async (req, res) => {
+   try {
+     const idUser = req.params.idUser;
+     const usersId = await userModel.findById(idUser);
+     if(!usersId){
+        return res.status(200).send("No hay usuario");
+      }
+      res.status(200).send(usersId)
+   } catch (error) {
+    res.status(500).send({ status: "Failed", error: error.message });
+   }
 }  
 
-const getUserByName = (req, res) => {
-    const { name } = req.params;
-    const user = users.find(user => user.nombre.includes(name));
-    if (!user) {
-        return res.send('User not found');
+const getUserByName = async (req, res) => {
+    try {
+      const name = req.params.name;
+      const userName = await userModel.find({ name: new RegExp(name, "i") }); // Búsqueda flexible e insensible a mayúsculas
+      if (!userName.length) {
+        return res.status(200).send("No hay usuarios con ese nombre.");
     }
-    res.send(user)
+      res.status(200).send(userName);
+    } catch (error) {
+        res.status(500).send({ status: "Failed", error: error.message });
+    }
 }
 
-const getUserAge = (req, res) => {
-    const edad = parseInt(req.params.edad); // Corrección en la extracción del parámetro
-    const user = users.find(user => user.edad === edad);
-
-    if (!user) {
-        return res.status(404).send('User not found'); // Usar código de estado 404 para mejor práctica
+const deletedUser = async (req, res) => {
+    try {
+     const idUser = req.params.idUser;
+     const usersId = await userModel.findByIdAndDelete(idUser);
+     if(!usersId){
+        return res.status(200).send("No hay usuario");
+      }
+      res.status(200).send(usersId)
+    } catch (error) {
+        res.status(500).send({ status: "Failed", error: error.message });
     }
+}
 
-    res.json(user); // Mejor práctica: devolver la respuesta en formato JSON
-};
+const replaceUser = async (req, res) => {
+    try {
+     const idUser = req.params.idUser;
+     const newUser = req.body;
+     const replaceUser = await userModel.findOneAndReplace(
+        {_id: idUser},
+        newUser,
+        {
+            new: true,
+            runValidators: true
+        }
+    );
+     if(!replaceUser){
+        return res.status(200).send("No hay usuario");
+      }
+      res.status(200).send(replaceUser)
+    } catch (error) {
+        res.status(500).send({ status: "Failed", error: error.message });
+    }
+}
+
+const updateUser = async (req, res) => {
+    try {
+     const idUser = req.params.idUser;
+     const newUser = req.body;
+     const replaceUser = await userModel.findByIdAndUpdate(
+        {_id: idUser},
+        newUser,
+        {
+            new: true,
+            runValidators: true
+        }
+    );
+     if(!replaceUser){
+        return res.status(200).send("No hay usuario");
+      }
+      res.status(200).send(replaceUser)
+    } catch (error) {
+        res.status(500).send({ status: "Failed", error: error.message });
+    }
+}
 
 const addUser = async (req, res) => {
     try {
@@ -49,5 +108,7 @@ module.exports = {
     getUserById,
     getUserByName,
     addUser,
-    getUserAge
+    deletedUser,
+    replaceUser,
+    updateUser
 }
