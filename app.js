@@ -7,7 +7,8 @@
 const PORT = 3000;
 const express = require('express');
 const userRouter = require('./routers/userRouter');
-const movieRouter = require('./routers/movieRouter')
+const movieRouter = require('./routers/movieRouter');
+const loginRouter = require('./routers/loginRouter');
 require("dotenv").config();
 const connectToDatabase = require('./db/connetDB');
 
@@ -19,7 +20,7 @@ app.use(express.json());
 connectToDatabase();
 app.use('/api/user', userRouter);
 app.use('/api/movie', movieRouter);
-
+app.use('/api/auth', loginRouter);
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);

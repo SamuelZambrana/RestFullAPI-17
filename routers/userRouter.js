@@ -4,7 +4,6 @@ const {
     getAllUser, 
     getUserById, 
     getUserByName, 
-    addUser, 
     deletedUser,
     replaceUser,
     updateUser,
@@ -15,7 +14,6 @@ const {
 router.get('/', getAllUser);
 router.get('/:idUser', getUserById);
 router.get('/searchName/:name', getUserByName);
-router.post('/', addUser)
 router.put('/:idUser', replaceUser)
 router.patch('/:idUser', updateUser)
 router.delete('/:idUser', deletedUser)

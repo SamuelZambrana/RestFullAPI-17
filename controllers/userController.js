@@ -96,16 +96,6 @@ const updateUser = async (req, res) => {
     }
 }
 
-const addUser = async (req, res) => {
-    try {
-      const newUser = req.body;
-      await userModel.create(newUser)
-      res.status(200).send("El usuario se ha creado correctamente");
-    } catch (error) {
-      res.status(500).send({ status:"Failed", error: error.message })
-    }
-};
-
 const addFavouriteMovie = async (req, res) => {
     try {
       const { idUser, idMovie } = req.params;
@@ -160,7 +150,6 @@ module.exports = {
     getAllUser,
     getUserById,
     getUserByName,
-    addUser,
     deletedUser,
     replaceUser,
     updateUser,
