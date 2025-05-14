@@ -7,7 +7,9 @@ const {
     addUser, 
     deletedUser,
     replaceUser,
-    updateUser
+    updateUser,
+    addFavouriteMovie,
+    deletedFavouriteMovie
 } = require('../controllers/userController');
 
 router.get('/', getAllUser);
@@ -17,5 +19,6 @@ router.post('/', addUser)
 router.put('/:idUser', replaceUser)
 router.patch('/:idUser', updateUser)
 router.delete('/:idUser', deletedUser)
-
+router.patch('/:idUser/favourites/:idMovie', addFavouriteMovie)
+router.patch('/:idUser/removeFavourites/:idMovie', deletedFavouriteMovie)
 module.exports = router;

@@ -1,4 +1,5 @@
 const userModel = require('../models/userModel')
+const movieModel = require('../models/movieModel')
 
 const getAllUser = async (req, res) => {
     try {
@@ -15,7 +16,9 @@ const getAllUser = async (req, res) => {
 const getUserById =  async (req, res) => {
    try {
      const idUser = req.params.idUser;
-     const usersId = await userModel.findById(idUser);
+     const usersId = await userModel
+            .findById(idUser)
+            .populate({ path: "favourites", select: "title description" });
      if(!usersId){
         return res.status(200).send("No hay usuario");
       }
@@ -103,6 +106,56 @@ const addUser = async (req, res) => {
     }
 };
 
+const addFavouriteMovie = async (req, res) => {
+    try {
+      const { idUser, idMovie } = req.params;
+      const user = await userModel.findById(idUser);
+      if (!user) {
+        return res.status(200).send("No hay usuario");
+      }
+   
+      const movie = await movieModel.findById(idMovie);
+      if (!movie) {
+        return res.status(200).send("No hay peli");
+      }
+   
+      if (user.favourites.includes(idMovie)) {
+        return res.status(200).send("La película ya está en favoritos");
+      }
+   
+      user.favourites.push(idMovie);
+      user.save();
+   
+      res.status(200).send({ status: "Success", data: user });
+    } catch (error) {
+      res.status(500).send({ status: "Failed", error: error.message });
+    }
+  };
+
+const deletedFavouriteMovie = async (req, res) => {
+    try {
+      const { idUser, idMovie} = req.params;
+
+      const user = await userModel.findById(idUser);
+      if(!user){
+        return res.status(200).send("No hay usuario");
+      }
+
+      const movie = await movieModel.findById(idMovie);
+      if(!movie){
+        return res.status(200).send("No hay peli");
+      }
+
+      if (user.favourites.includes(idMovie)) {
+        user.favourites.pull(idMovie);
+        user.save()
+      }
+      res.status(200).send("El usuario ha eliminado la pelicula de favoritos");
+    } catch (error) {
+        res.status(500).send({ status:"Failed", error: error.message })
+    }
+}
+
 module.exports = {
     getAllUser,
     getUserById,
@@ -110,5 +163,7 @@ module.exports = {
     addUser,
     deletedUser,
     replaceUser,
-    updateUser
+    updateUser,
+    addFavouriteMovie,
+    deletedFavouriteMovie
 }
