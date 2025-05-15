@@ -2,17 +2,18 @@ const express = require('express');
 const router = express.Router();
 const {
     getAllUser, 
-    getUserById, 
     getUserByName, 
     deletedUser,
     replaceUser,
     updateUser,
     addFavouriteMovie,
-    deletedFavouriteMovie
+    deletedFavouriteMovie,
+    getMyProfile
 } = require('../controllers/userController');
+const verifyToken = require('../middlewares/auth');
 
 router.get('/', getAllUser);
-router.get('/:idUser', getUserById);
+router.get('/myProfile', verifyToken, getMyProfile);
 router.get('/searchName/:name', getUserByName);
 router.put('/:idUser', replaceUser)
 router.patch('/:idUser', updateUser)

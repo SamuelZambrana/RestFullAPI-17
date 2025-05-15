@@ -25,7 +25,7 @@ const getAllMovie = async (req, res) => {
 
 const getMovieById = async (req, res) => {
     try {
-        const idMovie = req.params.idMovie
+        const { idMovie } = req.params
         const movie = await movieModel.findById(idMovie);
         if(!movie){
             return res.status(200).send("No hay usuario");

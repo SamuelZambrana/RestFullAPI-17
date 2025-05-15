@@ -1,5 +1,6 @@
 const userModel = require('../models/userModel');
 const bcrypt = require('bcrypt');
+const generateToken = require('../utils/auth.token')
  
 const signup = async (req, res) => {
     try {
@@ -11,7 +12,7 @@ const signup = async (req, res) => {
             password: await bcrypt.hash(password, 10)
         }
         await userModel.create(newUser);
-        res.status(200).send("El usuario se ha creado correctamente");
+        res.status(200).send({status: "Success", data: newUser});
     } catch (error) {
       res.status(500).send({ status: "Failed", error: error.message });
     }
@@ -33,8 +34,17 @@ const login = async (req, res) => {
       if (!validatePassword) {
         return res.status(404).send("Usuario o contraseña no validos");
       }
+
+      const payload = {
+        _id: user._id,
+        name: user.name,
+        role: user.role
+      }
    
-      res.status(200).send({ status: "Success", data: user });
+      const token = generateToken(payload, false);
+      const token_refresh = generateToken(payload, true)
+   
+      res.status(200).send({ status: "Success", data: user, token: token, token_refresh });
     } catch (error) {
       res.status(500).send({ status: "Failed", error: error.message });
     }

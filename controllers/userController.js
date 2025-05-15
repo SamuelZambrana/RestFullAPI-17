@@ -13,9 +13,9 @@ const getAllUser = async (req, res) => {
     }
   };
 
-const getUserById =  async (req, res) => {
+const getMyProfile =  async (req, res) => {
    try {
-     const idUser = req.params.idUser;
+     const idUser = req.payload._id;
      const usersId = await userModel
             .findById(idUser)
             .populate({ path: "favourites", select: "title description" });
@@ -148,7 +148,7 @@ const deletedFavouriteMovie = async (req, res) => {
 
 module.exports = {
     getAllUser,
-    getUserById,
+    getMyProfile,
     getUserByName,
     deletedUser,
     replaceUser,
